@@ -3,9 +3,7 @@ import numpy
 import os
 import threading
 import datetime
-from datetime import timedelta
-from datetime import date
-import math
+from datetime import datetime
 import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 
@@ -27,8 +25,8 @@ for i in range(0,len(BackgroundPins)):
     GPIO.setup(BackgroundPins[i], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(MakePicPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-lastbuttontime = 0
 def GetSelectedBackground():
+    lastbuttontime = 0
     while True:
         now = time.time()
         for i in range(0,len(BackgroundPins)):
@@ -38,6 +36,7 @@ def GetSelectedBackground():
         time.sleep(0.020)
 
 
+lastbuttontime = 0 
 while True:
     
     now = time.time()
@@ -47,35 +46,39 @@ while True:
         lastbuttontime = now
 
         # Ask & select the background
-        os.system('mpg321 welkom.mp3') # Message welcome
-        time.sleep(2)
-        
-        os.system('mpg321 selecteer.mp3') # Message to ask for picture selection
-        for i in range(0,len(BackgroundOptions)):
-            time.sleep(1)
-            os.system('mpg321 '+BackgroundOptions[i]+'.mp3') 
-        BackgroundID = GetSelectedBackground()
-        os.system('mpg321 geselecteerd.mp3') # Message to tell which one selected
+        os.system('mpg321 -g 5 welkom.mp3') # Message welcome
         time.sleep(1)
-        os.system('mpg321 '+BackgroundOptions[i]+'.mp3')
+        
+        os.system('mpg321 -g 5 selecteer.mp3') # Message to ask for picture selection
+        for i in range(0,len(BackgroundOptions)):
+            time.sleep(0.5)
+            os.system('mpg321 -g 5 '+BackgroundOptions[i]+'.mp3')
+        print('% Entering selecting the background routine')
+        BackgroundID = GetSelectedBackground()
+        os.system('mpg321 -g 5 geselecteerd.mp3') # Message to tell which one selected
+        time.sleep(1)
+        os.system('mpg321 -g 5 '+BackgroundOptions[i]+'.mp3')
         backgroundfilename = BackgroundOptions[BackgroundID]+'.jpg'
         
         # Countdown and take the snapshot
         time.sleep(2)
-        os.system('mpg321 poseer.mp3') # Message that countdown starts
-        os.system('raspistill -vf -o snapshot.jpg' # Make the snapshot
+        os.system('mpg321 -g 5 poseer.mp3') # Message that countdown starts
+        os.system('raspistill -vf -o snapshot.jpg') # Make the snapshot
+        print('% Picture taken, now converting')
         
         # Wait and convert the picture
         time.sleep(2)
-        os.system('mpg321 wachten.mp3') # Tell the user to wait
-        os.system('convert snapshot.jpg -fuzz 40% -transparent #1eff01 snapshot_green_removed.png') # Remove the green background with image magick
+        os.system('mpg321 -g 5 wachten.mp3') # Tell the user to wait
+        os.system('convert snapshot.jpg -resize 2400x1600 snapshot2.jpg')
+        os.system('convert snapshot2.jpg -fuzz 40% -transparent \'#5b5e2f\' snapshot_green_removed.png') # Remove the green background with image magick
         outputfilename = 'snapshot_'+datetime.now().strftime("%Y%m%d_%H%M%S")+'.png'
         os.system('convert -composite '+backgroundfilename+' snapshot_green_removed.png -gravity center '+outputfilename) # Overlay on top of selected background
-        
+        print('% Converting ended, now printing')
+
         # Print picture and inform ready
-        os.system('lp -d Canon_CP900 '+outputfilename) # Print the picture with cups
+        os.system('lp -d HP_Photosmart_6520_series '+outputfilename) # Print the picture with cups
         time.sleep(30)
-        os.system('mpg321 klaar.mp3') # Tell user that it is finished
+        os.system('mpg321 -g 5 klaar.mp3') # Tell user that it is finished
 
     time.sleep(0.020)
     
