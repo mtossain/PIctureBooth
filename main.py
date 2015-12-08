@@ -75,7 +75,7 @@ while True:
         # Print picture and inform ready
         os.system('lp -d Canon_CP900 '+outputfilename) # Print the picture with cups
         time.sleep(30)
-        os.system('mpg321 klaar.mp3')   
+        os.system('mpg321 klaar.mp3') # Tell user that it is finished
 
     time.sleep(0.020)
     
