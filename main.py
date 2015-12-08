@@ -67,14 +67,14 @@ while True:
         time.sleep(1)
         os.system('mpg321 -g 5 vijf.mp3') # Message that countdown starts
         time.sleep(1)
-        os.system('mpg321 -g 5 vier.mp3 &') # Message that countdown starts
+        os.system('mpg321 -g 5 vier.mp3') # Message that countdown starts
         time.sleep(1)
         os.system('raspistill -vf -o snapshot.jpg &') # Make the snapshot
-        os.system('mpg321 -g 5 drie.mp3 &') # Message that countdown starts
+        os.system('mpg321 -g 5 drie.mp3') # Message that countdown starts
         time.sleep(1)
-        os.system('mpg321 -g 5 twee.mp3 &') # Message that countdown starts
+        os.system('mpg321 -g 5 twee.mp3') # Message that countdown starts
         time.sleep(1)
-        os.system('mpg321 -g 5 een.mp3 &') # Message that countdown starts
+        os.system('mpg321 -g 5 een.mp3') # Message that countdown starts
         print('% Picture taken, now converting')
         
         # Wait and convert the pictures
