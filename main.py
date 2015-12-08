@@ -30,7 +30,7 @@ def GetSelectedBackground():
     while True:
         now = time.time()
         for i in range(0,len(BackgroundPins)):
-            if not GPIO.input(BackgroundPins[i]) and (now - lastbuttontime) > 0.2:
+            if not GPIO.input(BackgroundPins[i]) and (now - lastbuttontime) > 0.1:
                 lastbuttontime = now
                 return i
         time.sleep(0.020)
@@ -55,28 +55,29 @@ while True:
             os.system('mpg321 -g 5 '+BackgroundOptions[i]+'.mp3')
         print('% Entering selecting the background routine')
         BackgroundID = GetSelectedBackground()
+        print('% Gevonden pin: '+str(BackgroundID))
         os.system('mpg321 -g 5 geselecteerd.mp3') # Message to tell which one selected
         time.sleep(1)
-        os.system('mpg321 -g 5 '+BackgroundOptions[i]+'.mp3')
+        os.system('mpg321 -g 5 '+BackgroundOptions[BackgroundID]+'.mp3')
         backgroundfilename = BackgroundOptions[BackgroundID]+'.jpg'
         
         # Countdown and take the snapshot
-        time.sleep(2)
+        time.sleep(1)
         os.system('mpg321 -g 5 poseer.mp3') # Message that countdown starts
         time.sleep(1)
         os.system('mpg321 -g 5 vijf.mp3') # Message that countdown starts
         time.sleep(1)
-        os.system('mpg321 -g 5 vier.mp3') # Message that countdown starts
+        os.system('mpg321 -g 5 vier.mp3 &') # Message that countdown starts
         time.sleep(1)
-        os.system('mpg321 -g 5 drie.mp3') # Message that countdown starts
+        os.system('raspistill -vf -o snapshot.jpg &') # Make the snapshot
+        os.system('mpg321 -g 5 drie.mp3 &') # Message that countdown starts
         time.sleep(1)
-        os.system('mpg321 -g 5 twee.mp3') # Message that countdown starts
+        os.system('mpg321 -g 5 twee.mp3 &') # Message that countdown starts
         time.sleep(1)
-        os.system('mpg321 -g 5 een.mp3') # Message that countdown starts
-        os.system('raspistill -vf -o snapshot.jpg') # Make the snapshot
+        os.system('mpg321 -g 5 een.mp3 &') # Message that countdown starts
         print('% Picture taken, now converting')
         
-        # Wait and convert the picture
+        # Wait and convert the pictures
         time.sleep(2)
         os.system('mpg321 -g 5 wachten.mp3') # Tell the user to wait
         os.system('convert snapshot.jpg -resize 2400x1600 snapshot2.jpg')
