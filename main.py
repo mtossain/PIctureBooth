@@ -58,7 +58,7 @@ while True:
         os.system('mpg321 geselecteerd.mp3') # Message to tell which one selected
         time.sleep(1)
         os.system('mpg321 '+BackgroundOptions[i]+'.mp3')
-        backgroundfilename = 'background'+str(BackgroundID)+'.jpg'
+        backgroundfilename = BackgroundOptions[BackgroundID]+'.jpg'
         
         # Countdown and take the snapshot
         time.sleep(2)
